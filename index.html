@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080d1b">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Rocky AI</title>
+<style>
+:root{--bg:#080d1b;--panel:#111a2d;--panel2:#17233b;--blue:#54b8ff;--purple:#9274ff;--text:#eef4ff;--muted:#9aabc7;--line:#263653}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0%,#1c2450 0,transparent 38%),var(--bg);color:var(--text);font:16px system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:20px 16px 96px}.top{display:flex;align-items:center;justify-content:space-between;margin:8px 0 22px}.brand{font-weight:800;font-size:22px;letter-spacing:1px}.brand span{color:var(--blue)}.lock{border:1px solid var(--line);background:var(--panel);color:var(--text);border-radius:20px;padding:8px 12px}
+.hero{background:linear-gradient(140deg,#17294a,#211d49 70%,#14213b);border:1px solid #34466d;border-radius:26px;padding:22px;text-align:center;box-shadow:0 18px 45px #0005}
+.orb{width:104px;height:104px;border-radius:50%;margin:4px auto 14px;background:radial-gradient(circle at 35% 30%,#fff 0 2%,#9be4ff 5%,#4a9cff 22%,#7457e8 52%,#171c47 75%);box-shadow:0 0 28px #4d9dff99,0 0 70px #805bff55;display:grid;place-items:center;font-size:34px}
+h1{font-size:25px;margin:6px 0}p{color:var(--muted);line-height:1.5;margin:6px 0}.status{font-size:12px;color:#b9dfff;margin-top:10px}
+.section{font-size:15px;margin:24px 2px 12px;color:#dbe7ff;font-weight:700}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.tile{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:15px;min-height:100px}.emoji{font-size:24px}.tile b{display:block;margin:7px 0 3px}.tile small{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:14px;margin-top:12px}
+input,textarea{width:100%;background:#0b1324;color:var(--text);border:1px solid var(--line);border-radius:13px;padding:13px;font:inherit;outline:none}button{cursor:pointer;font:inherit}.primary{border:0;background:linear-gradient(100deg,var(--blue),var(--purple));color:#071020;font-weight:750;border-radius:13px;padding:12px 16px}.row{display:flex;gap:8px;margin-top:10px}.row input{min-width:0}.row button{white-space:nowrap}
+.chatlog{height:220px;overflow:auto;display:flex;flex-direction:column;gap:9px;margin:12px 0}.bubble{max-width:88%;padding:10px 12px;border-radius:14px;background:#1b2943;color:var(--text);align-self:flex-start;line-height:1.4}.bubble.me{align-self:flex-end;background:#263e68}.note{font-size:12px;color:#a8b8d4}
+.reminder{display:flex;justify-content:space-between;align-items:center;gap:10px;border-bottom:1px solid var(--line);padding:10px 0}.reminder:last-child{border:0}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);display:flex;justify-content:space-around;background:#0b1324ee;border-top:1px solid var(--line);padding:12px 6px calc(12px + env(safe-area-inset-bottom));backdrop-filter:blur(12px)}
+nav button{border:0;background:none;color:var(--muted);font-size:12px}nav button.active{color:var(--blue)}.page{display:none}.page.active{display:block}
+#lockscreen{position:fixed;inset:0;background:#080d1b;z-index:5;display:none;place-items:center;padding:24px}.lockbox{width:min(360px,100%);background:var(--panel);padding:24px;border:1px solid var(--line);border-radius:22px;text-align:center}
+</style>
+</head>
+<body>
+<div id="lockscreen"><div class="lockbox"><div class="orb">R</div><h2>Rocky AI is locked</h2><p>Enter your PIN to open your assistant.</p><input id="pinInput" type="password" inputmode="numeric" maxlength="8" placeholder="Enter PIN"><div style="height:12px"></div><button class="primary" onclick="unlock()">Unlock</button><p id="pinMsg" class="note"></p></div></div>
+<main class="app">
+<header class="top"><div class="brand">ROCKY <span>AI</span></div><button class="lock" onclick="lockApp()">🔒 Lock</button></header>
+<section id="home" class="page active">
+<div class="hero"><div class="orb">R</div><h1>Hi Bharath 👋</h1><p>Your personal assistant is ready.</p><div class="status">● PERSONAL ASSISTANT · DEMO MODE</div></div>
+<div class="section">Quick tools</div><div class="grid">
+<div class="tile" onclick="showPage('chat')"><div class="emoji">💬</div><b>AI Chat</b><small>Chat interface preview</small></div>
+<div class="tile" onclick="showPage('study')"><div class="emoji">📚</div><b>Study Help</b><small>College study tools</small></div>
+<div class="tile" onclick="showPage('reminders')"><div class="emoji">⏰</div><b>Reminders</b><small>Save a local reminder</small></div>
+<div class="tile" onclick="showPage('voice')"><div class="emoji">🎙️</div><b>Voice</b><small>Speak using your browser</small></div>
+</div><div class="panel"><b>🔐 Privacy note</b><p class="note">This prototype keeps your reminders and PIN on this device/browser. It is not connected to an AI service yet. Avoid storing sensitive information.</p></div>
+</section>
+<section id="chat" class="page"><div class="section">💬 Rocky Chat</div><div class="panel"><div class="chatlog" id="chatlog"><div class="bubble">Vanakkam Bharath! Naan Rocky AI. This is a preview chat; AI connection is not enabled yet. 🤖</div></div><div class="row"><input id="chatInput" placeholder="Type a message..." onkeydown="if(event.key==='Enter')sendChat()"><button class="primary" onclick="sendChat()">Send</button></div><p class="note">Demo replies only — connect an AI backend to enable real AI answers.</p></div></section>
+<section id="study" class="page"><div class="section">📚 Study Assistant</div><div class="panel"><b>Study shortcuts</b><p>• Make short notes from a topic</p><p>• Explain formulas step by step</p><p>• Prepare assignment answers</p><p>• Create revision questions</p><p class="note">These are shortcuts for the future AI connection. You can use this chat prototype for now.</p><button class="primary" onclick="showPage('chat')">Open chat</button></div></section>
+<section id="voice" class="page"><div class="section">🎙️ Voice Assistant</div><div class="panel"><p>Tap the button and speak. Browser speech recognition support may vary.</p><button class="primary" onclick="startVoice()">🎙️ Start speaking</button><p id="voiceText" class="note">Your speech text will appear here.</p></div></section>
+<section id="reminders" class="page"><div class="section">⏰ My Reminders</div><div class="panel"><div class="row"><input id="reminderInput" placeholder="Add a reminder..."><button class="primary" onclick="addReminder()">Add</button></div><div id="reminderList"></div></div></section>
+</main>
+<nav><button class="active" data-page="home" onclick="showPage('home')">⌂<br>Home</button><button data-page="chat" onclick="showPage('chat')">◉<br>Chat</button><button data-page="study" onclick="showPage('study')">▤<br>Study</button><button data-page="reminders" onclick="showPage('reminders')">◷<br>Tasks</button></nav>
+<script>
+const pages=['home','chat','study','voice','reminders'];
+function showPage(id){pages.forEach(p=>document.getElementById(p).classList.toggle('active',p===id));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));}
+function sendChat(){const i=document.getElementById('chatInput'),v=i.value.trim();if(!v)return;const log=document.getElementById('chatlog');let a=document.createElement('div');a.className='bubble me';a.textContent=v;log.appendChild(a);let b=document.createElement('div');b.className='bubble';b.textContent='I received your message. Real AI replies will work after a secure AI connection is added.';log.appendChild(b);i.value='';log.scrollTop=log.scrollHeight;}
+function addReminder(){const i=document.getElementById('reminderInput'),v=i.value.trim();if(!v)return;let a=JSON.parse(localStorage.getItem('rocky_reminders')||'[]');a.push(v);localStorage.setItem('rocky_reminders',JSON.stringify(a));i.value='';renderReminders();}
+function renderReminders(){let a=JSON.parse(localStorage.getItem('rocky_reminders')||'[]');document.getElementById('reminderList').innerHTML='';a.forEach((v,n)=>{let d=document.createElement('div');d.className='reminder';let s=document.createElement('span');s.textContent=v;let x=document.createElement('button');x.textContent='✕';x.className='lock';x.onclick=()=>{a.splice(n,1);localStorage.setItem('rocky_reminders',JSON.stringify(a));renderReminders()};d.append(s,x);document.getElementById('reminderList').append(d)});}
+function startVoice(){let out=document.getElementById('voiceText');let SR=window.SpeechRecognition||window.webkitSpeechRecognition;if(!SR){out.textContent='Speech recognition is not supported in this browser. Try Chrome.';return;}let r=new SR();r.lang='en-IN';r.onresult=e=>out.textContent=e.results[0][0].transcript;r.onerror=()=>out.textContent='Could not hear clearly. Please try again.';r.start();}
+function lockApp(){document.getElementById('lockscreen').style.display='grid';document.getElementById('pinInput').value='';}
+function unlock(){let p=document.getElementById('pinInput').value, saved=localStorage.getItem('rocky_pin');if(!saved){if(p.length<4){document.getElementById('pinMsg').textContent='Create a PIN with at least 4 digits.';return;}localStorage.setItem('rocky_pin',p);document.getElementById('pinMsg').textContent='PIN created. Unlock again to continue.';return;}if(p===saved){document.getElementById('lockscreen').style.display='none';document.getElementById('pinMsg').textContent='';}else document.getElementById('pinMsg').textContent='Incorrect PIN.';}
+renderReminders();
+if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+</script>
+</body></html>
